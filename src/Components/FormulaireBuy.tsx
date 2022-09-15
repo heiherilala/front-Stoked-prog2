@@ -3,13 +3,13 @@ import { Field, FieldArray, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { APIUrl, backgroundColor } from "../constants";
-import { activity, Application, JobOffer, material, materialCreate, moveCreateWhithStore, shop, store } from "../interfaces";
+import { activity, Application, buyCreateWhithMaterial, JobOffer, material, materialCreate, moveCreateWhithStore, shop, store, useCreateWhithMaterial } from "../interfaces";
 import { axiosGetWithPage, getCurrentUser, postPutDeletRequest } from "../hoooks";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 
 
-const FormulaireMove: React.FC = () => {
+const FormulaireBuy: React.FC = () => {
 
 
 const [materials, setMaterials] = useState<material[]>([])
@@ -40,19 +40,24 @@ useEffect(()=>{
   const formik = useFormik({
     initialValues: {
       quantity: 0,
-      storeTake: '',
+      cost: 0,
+      shop: '',
       material: '',
-      storeGive: '',
+      store: '',
 
     },
     validationSchema: Yup.object({
       material: Yup.number()
       .required("Requis"),
-      storeTake: Yup.number()
+      shop: Yup.number()
       .required("Requis"),
-      storeGive: Yup.number()
+      store: Yup.number()
       .required("Requis"),
       quantity: Yup.number()
+        .max(100000, "heure trop élevé (>100000)")
+        .required("Requis")
+        .typeError('Saisissez des chiffres'),
+      cost: Yup.number()
         .max(100000, "heure trop élevé (>100000)")
         .required("Requis")
         .typeError('Saisissez des chiffres'),
@@ -64,14 +69,15 @@ useEffect(()=>{
       
       const objectData = {
         quantity: values.quantity,
+        cost: values.cost,
         material: {idMaterial:values.material},
-        storeTake:{idStore:values.storeTake},
-        storeGive:{idStore:values.storeGive}
+        shop:{idShop:values.shop},
+        store:{idStore:values.store}
       };
 
 
       try{
-        postPutDeletRequest("/moves/by-store",objectData,null,true,false,()=>{setLoadingCheck(false)},()=>{},myToken);
+        postPutDeletRequest("/buys/by-material",objectData,null,true,false,()=>{setLoadingCheck(false)},()=>{},myToken);
       } catch (error){};
     },
   });
@@ -97,7 +103,7 @@ useEffect(()=>{
       <div className="componentForm">
           <div className="d-flex flex-column bd-highlight">
             <div className="">
-              {'      '}<h3 className="">Mouvment de materiaux entre deux emplacement</h3>
+              {'      '}<h3 className="">Ajouter des materiaux</h3>
             </div>
             <form
               action=""
@@ -107,7 +113,7 @@ useEffect(()=>{
             
               <div className="form-group">
                 <label htmlFor="id" className="label_input">
-                  Quantier:
+                  Quantité:
                 </label>
                 <input
                   id="quantity"
@@ -118,6 +124,21 @@ useEffect(()=>{
                   onChange={formik.handleChange}
                 />
                 {formik.errors.quantity ? <p> {formik.errors.quantity} </p> : null}
+              </div> 
+
+              <div className="form-group">
+                <label htmlFor="id" className="label_input">
+                  Prix:
+                </label>
+                <input
+                  id="cost"
+                  type="text"
+                  className="form-control"
+                  placeholder="salaire"
+                  value={formik.values.cost}
+                  onChange={formik.handleChange}
+                />
+                {formik.errors.cost ? <p> {formik.errors.cost} </p> : null}
               </div> 
 
               <div className="form-group">
@@ -144,33 +165,33 @@ useEffect(()=>{
 
               <div className="form-group">
                 <label htmlFor="id" className="label_input">
-                lieu d'origine:
+                Activité :
                 </label>
                 <select
-                  id="storeTake"
+                  id="shop"
                   className="form-control"
                   placeholder="salaire"
-                  value={formik.values.storeTake}
+                  value={formik.values.shop}
                   onChange={formik.handleChange}
                 >
-                  {stores.map((store)=>(
-                    <option value={store.idStore} label={store.name}>
-                      {store.name}
+                  {shops.map((shop)=>(
+                    <option value={shop.idShop} label={shop.name}>
+                      {shop.name}
                     </option>
                   ))}
                 </select>
-                {formik.errors.storeTake ? <p> {formik.errors.storeTake} </p> : null}
+                {formik.errors.shop ? <p> {formik.errors.shop} </p> : null}
               </div>  
               
               <div className="form-group">
                 <label htmlFor="id" className="label_input">
-                  lieu de destination:
+                  Emplacement du materiau:
                 </label>
                 <select
-                  id="storeGive"
+                  id="store"
                   className="form-control"
                   placeholder="salaire"
-                  value={formik.values.storeGive}
+                  value={formik.values.store}
                   onChange={formik.handleChange}
                 >
                   {stores.map((store)=>(
@@ -179,7 +200,7 @@ useEffect(()=>{
                     </option>
                   ))}
                 </select>
-                {formik.errors.storeGive ? <p> {formik.errors.storeGive} </p> : null}
+                {formik.errors.store ? <p> {formik.errors.store} </p> : null}
               </div>  
 
 
@@ -202,4 +223,4 @@ useEffect(()=>{
 
 };
 
-export default FormulaireMove;
+export default FormulaireBuy;

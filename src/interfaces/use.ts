@@ -19,3 +19,15 @@ export interface useCreate {
   }
 }
 
+export interface useCreateWhithMaterial{
+  quantity: number,
+  material: {
+    idMaterial: number
+  },
+    store: {
+        idStore: number
+  },
+  activity: {
+    idActivity: number
+  }
+}

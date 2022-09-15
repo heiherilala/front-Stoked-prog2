@@ -1,23 +1,37 @@
-
+import React, { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 
 interface props {
+  corps: string;
   finish: ()=>void;
+  function:()=>void;
 }
 
-const Loading: React.FC<props> = (props) => {
+const ConfirmDispo: React.FC<props> = (props) => {
 
   return (
     <>
-      <Modal className='transparant d-flex align-items-center justify-content-center' show={true} onHide={props.finish}>
-            <button className={"custom_color_3"}  onClick={()=>{props.finish()}}>
-              <span className="spinner-border spinner-border-sm marge"></span>
-              {"  "}Chargement en cours
-            </button>
+      <Modal show={true} onHide={props.finish}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmation des changements</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p> {props.corps} </p>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" className='custom_color_refuse' onClick={props.finish}>
+            Annuler
+          </Button> 
+          <Button variant="primary" className='custom_color_accept' onClick={props.function}>
+            Accepter
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );
 }
 
-export default Loading;
+export default ConfirmDispo;

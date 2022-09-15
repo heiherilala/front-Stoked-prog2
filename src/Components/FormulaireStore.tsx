@@ -3,23 +3,32 @@ import { Field, FieldArray, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { APIUrl, backgroundColor } from "../constants";
-import { Application, JobOffer, storeCreate } from "../interfaces";
+import { Application, JobOffer, store, storeCreate } from "../interfaces";
 import { getCurrentUser, postPutDeletRequest } from "../hoooks";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
+import { changeData } from "./Tableshop/ChangeData";
 interface props {
-  idJobOffer:number;
+  changObject:store|undefined;
+  finishFunction:()=>void
 }
 
 const FormulaireStore: React.FC<props> = (props) => {
+  const changObject =  props.changObject;
+  const object1:string = changObject?changObject.name:"";
+  const object2:string = changObject?changObject.place:"";
+  const object3:number = changObject?changObject.maxWeigthKg:0;
+  const object4:number = changObject?changObject.maxVolumeM3:0;
+  const object5:string = changObject?changObject.name:"";
+  const object6:string = changObject?changObject.name:"";
 
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      place: "",
-      maxWeigthKg: 0,
-      maxVolumeM3: 0,
+      name: object1,
+      place: object2,
+      maxWeigthKg: object3,
+      maxVolumeM3: object4,
 
     },
     validationSchema: Yup.object({
@@ -52,7 +61,12 @@ const FormulaireStore: React.FC<props> = (props) => {
 
 
       try{
-        postPutDeletRequest("/stores",objectData,null,true,false,()=>{setLoadingCheck(false)},()=>{},myToken);
+        if (changObject==undefined) {
+          postPutDeletRequest("/stores",objectData,null,true,false,()=>{setLoadingCheck(false);props.finishFunction()},()=>{},myToken);
+        }else{
+          postPutDeletRequest("/stores",objectData,changObject.idStore,false,true,()=>{setLoadingCheck(false);props.finishFunction()},()=>{},myToken);
+        }
+
       } catch (error){};
     },
   });
@@ -78,7 +92,7 @@ const FormulaireStore: React.FC<props> = (props) => {
       <div className="componentForm">
           <div className="d-flex flex-column bd-highlight">
             <div className="">
-              {'      '}<h3 className="">Information sur l'evenement</h3>
+              {'      '}<h3 className="">Modifer stokage</h3>
             </div>
             <form
               action=""
@@ -87,7 +101,7 @@ const FormulaireStore: React.FC<props> = (props) => {
             >
                 <div className="form-group">
                   <label htmlFor="id" className="label_input">
-                    Nom de l'evenment:
+                    Nom:
                   </label>
                   <input
                     id="name"
@@ -120,7 +134,7 @@ const FormulaireStore: React.FC<props> = (props) => {
                     
               <div className="form-group col transparant">
                 <label htmlFor="id" className="label_input">
-                  heur:
+                  Pois maximal:
                 </label>
                 <input
                   id="maxWeigthKg"
@@ -138,7 +152,7 @@ const FormulaireStore: React.FC<props> = (props) => {
 
               <div className="form-group col transparant">
                 <label htmlFor="id" className="label_input">
-                  heur:
+                  Volume maximal:
                 </label>
                 <input
                   id="maxVolumeM3"
@@ -161,6 +175,7 @@ const FormulaireStore: React.FC<props> = (props) => {
             </form>
 
           </div>
+
           {loadingCheck?Loading(()=>{setLoadingCheck(false)}):<></>}
       </div>
     );

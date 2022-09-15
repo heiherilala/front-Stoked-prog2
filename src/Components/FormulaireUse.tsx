@@ -3,13 +3,13 @@ import { Field, FieldArray, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { APIUrl, backgroundColor } from "../constants";
-import { activity, Application, JobOffer, material, materialCreate, moveCreateWhithStore, shop, store } from "../interfaces";
+import { activity, Application, JobOffer, material, materialCreate, moveCreateWhithStore, shop, store, use, useCreateWhithMaterial } from "../interfaces";
 import { axiosGetWithPage, getCurrentUser, postPutDeletRequest } from "../hoooks";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 
 
-const FormulaireMove: React.FC = () => {
+const FormulaireUse: React.FC = () => {
 
 
 const [materials, setMaterials] = useState<material[]>([])
@@ -36,21 +36,20 @@ useEffect(()=>{
 
 
 
-
   const formik = useFormik({
     initialValues: {
       quantity: 0,
-      storeTake: '',
+      activity: '',
       material: '',
-      storeGive: '',
+      store: '',
 
     },
     validationSchema: Yup.object({
       material: Yup.number()
       .required("Requis"),
-      storeTake: Yup.number()
+      activity: Yup.number()
       .required("Requis"),
-      storeGive: Yup.number()
+      store: Yup.number()
       .required("Requis"),
       quantity: Yup.number()
         .max(100000, "heure trop élevé (>100000)")
@@ -65,13 +64,13 @@ useEffect(()=>{
       const objectData = {
         quantity: values.quantity,
         material: {idMaterial:values.material},
-        storeTake:{idStore:values.storeTake},
-        storeGive:{idStore:values.storeGive}
+        activity:{idActivity:values.activity},
+        store:{idStore:values.store}
       };
 
 
       try{
-        postPutDeletRequest("/moves/by-store",objectData,null,true,false,()=>{setLoadingCheck(false)},()=>{},myToken);
+        postPutDeletRequest("/uses/by-material",objectData,null,true,false,()=>{setLoadingCheck(false)},()=>{},myToken);
       } catch (error){};
     },
   });
@@ -97,7 +96,7 @@ useEffect(()=>{
       <div className="componentForm">
           <div className="d-flex flex-column bd-highlight">
             <div className="">
-              {'      '}<h3 className="">Mouvment de materiaux entre deux emplacement</h3>
+              {'      '}<h3 className="">Information sur l'evenement</h3>
             </div>
             <form
               action=""
@@ -107,7 +106,7 @@ useEffect(()=>{
             
               <div className="form-group">
                 <label htmlFor="id" className="label_input">
-                  Quantier:
+                  Limit maximal:
                 </label>
                 <input
                   id="quantity"
@@ -144,33 +143,33 @@ useEffect(()=>{
 
               <div className="form-group">
                 <label htmlFor="id" className="label_input">
-                lieu d'origine:
+                Activité :
                 </label>
                 <select
-                  id="storeTake"
+                  id="activity"
                   className="form-control"
                   placeholder="salaire"
-                  value={formik.values.storeTake}
+                  value={formik.values.activity}
                   onChange={formik.handleChange}
                 >
-                  {stores.map((store)=>(
-                    <option value={store.idStore} label={store.name}>
-                      {store.name}
+                  {activitys.map((activity)=>(
+                    <option value={activity.idActivity} label={activity.name}>
+                      {activity.name}
                     </option>
                   ))}
                 </select>
-                {formik.errors.storeTake ? <p> {formik.errors.storeTake} </p> : null}
+                {formik.errors.activity ? <p> {formik.errors.activity} </p> : null}
               </div>  
               
               <div className="form-group">
                 <label htmlFor="id" className="label_input">
-                  lieu de destination:
+                  Emplacement du materiau:
                 </label>
                 <select
-                  id="storeGive"
+                  id="store"
                   className="form-control"
                   placeholder="salaire"
-                  value={formik.values.storeGive}
+                  value={formik.values.store}
                   onChange={formik.handleChange}
                 >
                   {stores.map((store)=>(
@@ -179,7 +178,7 @@ useEffect(()=>{
                     </option>
                   ))}
                 </select>
-                {formik.errors.storeGive ? <p> {formik.errors.storeGive} </p> : null}
+                {formik.errors.store ? <p> {formik.errors.store} </p> : null}
               </div>  
 
 
@@ -202,4 +201,4 @@ useEffect(()=>{
 
 };
 
-export default FormulaireMove;
+export default FormulaireUse;

@@ -3,27 +3,34 @@ import { Field, FieldArray, useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { APIUrl, backgroundColor } from "../constants";
-import { Application, JobOffer, materialCreate } from "../interfaces";
+import { Application, JobOffer, material, materialCreate } from "../interfaces";
 import { getCurrentUser, postPutDeletRequest } from "../hoooks";
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
 interface props {
-  idJobOffer:number;
+  changObject:material|undefined;
+  finishFunction:()=>void
 }
 
 const FormulaireMaterial: React.FC<props> = (props) => {
 
-
-
+  const changObject =  props.changObject;
+  const object1:string = changObject?changObject.name:"";
+  const object2:string = changObject?changObject.unit:"";
+  const object3:string = changObject?changObject.description:'';
+  const object4:number = changObject?changObject.limitMax:0;
+  const object5:number = changObject?changObject.weightKgUnit:0;
+  const object6:number = changObject?changObject.limitMin:0;
+  const object7:number = changObject?changObject.volumeM3Unit:0;
   const formik = useFormik({
     initialValues: {
-      name: "",
-      unit: "",
-      description: "",
-      limitMax: 0,
-      weightKgUnit: 0,
-      limitMin: 0,
-      volumeM3Unit: 0,
+      name: object1,
+      unit: object2,
+      description: object3,
+      limitMax: object4,
+      weightKgUnit: object5,
+      limitMin: object6,
+      volumeM3Unit: object7,
 
     },
     validationSchema: Yup.object({
@@ -70,7 +77,12 @@ const FormulaireMaterial: React.FC<props> = (props) => {
 
 
       try{
-        postPutDeletRequest("/materials",objectData,null,true,false,()=>{setLoadingCheck(false)},()=>{},myToken);
+        if (changObject==undefined) {
+          postPutDeletRequest("/materials",objectData,null,true,false,()=>{setLoadingCheck(false);props.finishFunction()},()=>{},myToken);
+        }else{
+          postPutDeletRequest("/materials",objectData,changObject.idMaterial,false,true,()=>{setLoadingCheck(false);props.finishFunction()},()=>{},myToken);
+        }
+        
       } catch (error){};
     },
   });
@@ -96,7 +108,7 @@ const FormulaireMaterial: React.FC<props> = (props) => {
       <div className="componentForm">
           <div className="d-flex flex-column bd-highlight">
             <div className="">
-              {'      '}<h3 className="">Information sur l'evenement</h3>
+              {'      '}<h3 className="">Modifier materiaux</h3>
             </div>
             <form
               action=""
@@ -105,7 +117,7 @@ const FormulaireMaterial: React.FC<props> = (props) => {
             >
                 <div className="form-group">
                   <label htmlFor="id" className="label_input">
-                    Nom de l'evenment:
+                    Nom:
                   </label>
                   <input
                     id="name"

@@ -21,3 +21,18 @@ export interface buyCreate {
   }
 }
 
+export interface buyCreateWhithMaterial{
+    quantity: number,
+    cost:number,
+    material: {
+      idMaterial: number
+    },
+    shop: {
+      idShop: number
+    },
+      store: {
+          idStore: number
+    }
+}
+
+

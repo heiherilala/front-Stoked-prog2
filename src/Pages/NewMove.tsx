@@ -1,6 +1,8 @@
 import React from 'react';
 import Footer from '../Components/Footer';
 import FormulaireBuy from '../Components/FormulaireBuy';
+import FormulaireMove from '../Components/FormulaireMove';
+import FormulaireUse from '../Components/FormulaireUse';
 import NavbarHeader from '../Components/NavbarHeader';
 import { TableMaterial } from '../Components/TableMaterial';
 import { Tableshop } from '../Components/Tableshop';
@@ -16,13 +18,14 @@ const NewEvent = () => {
                     {name:"Listes des offres d’emplois",href: (ProjectUrl + "/list-job")},
                     {name:"Listes des candicatures",href: (ProjectUrl + "/application")}
                 ],
-                {name:"Offre d’emploi2",href: (ProjectUrl + "/")}
+                {name:"Stokage",href: (ProjectUrl + "/")}
             )}
 
 
-            <Tableshop colloneName={["Nom", "emplacement", "description"]} title={'Liste acquisition'} delet={false} modif={true} />
-            <TableMaterial colloneName={["Nom", "Unité", "description"]} title={'Liste Maeriau'} delet={false} modif={true} />
-            <Tablestore colloneName={["Nom", "emplacement", "est t'il plein", "volome actiel", "Poids actuel"]} title={'Liste stokage'} delet={false} modif={true} />
+            <FormulaireMove />
+            <FormulaireBuy />
+            <FormulaireUse />
+            
             <Footer/>
         </>
     );

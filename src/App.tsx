@@ -12,6 +12,7 @@ import Login from './Pages/Login';
 import NavbarHeader from './Components/NavbarHeader';
 import { ProjectUrl } from './constants';
 import NewEvent from './Pages/NewEvent';
+import NewMove from './Pages/NewMove';
 
 function App() {
   return (
@@ -36,6 +37,13 @@ function App() {
                   element={
                     <>
                         {NewEvent()}
+                    </>
+                  }
+              />
+              <Route path="/move" 
+                  element={
+                    <>
+                        {NewMove()}
                     </>
                   }
               />
