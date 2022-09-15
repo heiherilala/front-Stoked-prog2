@@ -13,8 +13,8 @@ const NewEvent = () => {
 
             {NavbarHeader(
                 [
-                    {name:"Listes des offres d’emplois",href: (ProjectUrl + "/list-job")},
-                    {name:"Listes des candicatures",href: (ProjectUrl + "/application")}
+                    {name:"Listes",href: (ProjectUrl + "/")},
+                    {name:"Movement des Materiaux",href: (ProjectUrl + "/move")}
                 ],
                 {name:"Offre d’emploi2",href: (ProjectUrl + "/")}
             )}

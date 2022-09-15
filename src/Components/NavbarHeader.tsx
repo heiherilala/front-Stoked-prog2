@@ -34,7 +34,7 @@ const NavbarHeader = (navList:{name:string,href:string}[],title:{name:string,hre
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-light nav_perso ml-auto">
-              <a className="navbar-brand" href={title.href}> {title.name} </a>
+              <a className="navbar-brand" href={title.href}> Gestion de stokage</a>
               <button 
                   className="navbar-toggler"
                   type="button"
@@ -50,7 +50,7 @@ const NavbarHeader = (navList:{name:string,href:string}[],title:{name:string,hre
 
               <div className="navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto nav-Fot">
-                  {currentUser ?
+                  {true ?
                   navList.map((data,key)=>{return(
                       <li className="nav-item active">
                           <a className="nav-link" href={data.href}> {data.name}  <span className="sr-only">(current)</span></a>

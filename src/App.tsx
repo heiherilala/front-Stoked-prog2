@@ -29,13 +29,6 @@ function App() {
               <Route path="/" 
                   element={
                     <>
-                        {Recognition()}
-                    </>
-                  }
-              />
-              <Route path="/new-event" 
-                  element={
-                    <>
                         {NewEvent()}
                     </>
                   }
